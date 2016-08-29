@@ -1,0 +1,21 @@
+HQL  对大大小写敏感
+
+from [类名]  返回list
+select 查询多个参数   返回list<Object[]> select u.name,u.id from User as u  
+		查询 一个参数时返回list<Object> 
+select new list(s.name,s,address) from Student as s;   返回List<List>  list.get(1).get(1);
+select new Map(s.name as name,s.address as add) from Student as s;  返回List<Map>  map.get(0)| map.get("name");
+自定义返回类型 List<User>list=select new User(u.name,u.password) from User;
+
+distinct 去除查询结果的重复元素 select  distinct s.sex from Student;
+where 
+	id=null>>id is null   id<>null>>id is not null
+	> < =  not in(2,3,4)  between 20 and 40 	
+字符通配符   		% 任何字符  		_一个字符    like ‘%北京%’
+逻辑运算符   and or not
+集合运算 	is【not】 empty 集合为空的         member of  元素属于集合 
+uniqueResult  返回单个结果
+order by  asc升序  desc降序 
+
+
+select from where group by  having order by

@@ -1,0 +1,71 @@
+类注解：
+@Entity：映射实体类
+@Entity(name="tableName") 
+name:可选，对应数据库中的一个表，若表名与实体类同名，则可以省略
+注意：使用@Entity时必须指定实体类的主键属性（保证完整性）
+
+@Table(name="" catalog="" schema="")
+name映射表名    catalog目录  默认""  schema模式
+@Entity配合使用，只能标注在实体的class定义处，表示实体对应的数据库表的信息
+
+@Embeddable 表示一个非Entity类可以嵌入到另一个Entity类中作为属性属性存在  用@Embedded标注属性
+
+属性注解：
+@Id 必须，表示主键属性(属性或getXX 上)  如果有多个主键属性  则该实体必须实现serializable接口
+@GeneratedValue (strategy=GenerationType{主键生成策略 AUTO,INDENTITY,SEQUENCE序列,TABLE},generator=""表示主键生成器的名称)
+@Column
+	name 字段名  nullable是否能空 	unique 唯一 length insertable updateable
+	@Column(columnDefinition="INT default 0") //默认值
+@Embedded 表示该属性是嵌入类 结合@Embeddable
+@EmbeddedId 使用嵌入式组件类实现复合主键    嵌入式主键必须实现Serializable接口 有无参构造方法 必须覆盖equals和 hashCode
+@Transient 表示该属性并非一个到数据库的字段映射
+
+@SequenceGenerator
+@Lob
+@Version
+@Basic
+
+
+映射关系：：
+一对一 	单向	 主对从控制
+	主：     @OneToOne(cascade=CascadeType.ALL)//级联关系：全级联 
+						@JoinColumn(name="outid" ,unique=true)//表示被控类对应的主键    一对一他是我的唯一 别人不能用
+一对一		双向	
+		主：	@OneToOne(cascade=CascadeType.ALL)	
+					@JoinColumn(name="pid" ,unique=true)
+		从：	@OneToOne(mappedBy="card")	//指定被主控放控制  自己的句柄名
+多对一  	单向		先存一方
+		多方：@ManyToOne(cascade=CascadeType.ALL,fetch=FetchType.EAGER) //级联关系和抓取策略(积极)
+					@JoinColumn(name="cid",referencedColumnName="CID")//指定外键    ,本表中的列名
+		
+一对多 	单向		先存多放
+		一方：	@OneToMany(cascade={CascadeType.ALL},fetch=FetchType.LAZY)//级联关键系和抓取策略
+						@JoinColumn(name="cid")	//对应外键名称
+						private Set<Students> stus=new HashSet<Students>(); //一方持有多方的集合
+			
+一对多(多对一)双向外键
+		一方：	@OneToMany(cascade={CascadeType.ALL},fetch=FetchType.LAZY)//级联关键系和抓取策略(懒加载)
+						@JoinColumn(name="cid")	//对应外键名称
+					private Set<Students> stus=new HashSet<Students>(); //一方持有多方的集合
+		多放：@ManyToOne(cascade=CascadeType.ALL ,fetch=FetchType.EAGER)//级联关系和抓取策略(积极)
+					@JoinColumn(name="cid")	//指定外键   
+		
+多对多		单向
+		@ManyToMany
+		@JoinTable(name="teachesrs_students",	//中间表名称
+		joinColumns={@JoinColumn(name="sid")},	//本表主键
+		inverseJoinColumns={@JoinColumn(name="tid")}//外表主键
+		private Set<Teachers> teachers=new HashSet<Teachers>(); 学生
+		
+		如果双向  多加		先save本类
+		@ManyToMany(mappedBy="teachers") //指定被主控放控制  自己的句柄名
+
+
+
+
+
+
+//	控制反转 交给user控制				级联删除			级联关键系             			抓取策略(懒加载)
+	@OneToMany( /*orphanRemoval=true , mappedBy="department",*/cascade=CascadeType.ALL,fetch=FetchType.LAZY)//
+	@JoinColumn(name="fill")//对应外键名称   对方的数据库外键列名
+	private Set<KPI> myFillKPIs=new HashSet<KPI>();	//我的要填写的KPI表

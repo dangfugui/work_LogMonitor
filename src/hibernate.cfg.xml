@@ -1,0 +1,21 @@
+<?xml version='1.0' encoding='UTF-8'?>  
+<!DOCTYPE hibernate-configuration PUBLIC "-//Hibernate/Hibernate Configuration DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">  
+<hibernate-configuration>  
+<session-factory>  
+ 
+<property name="dialect">org.hibernate.dialect.DB2Dialect</property>  
+<property name="connection.driver_class">com.ibm.db2.jcc.DB2Driver</property>  
+<property name="connection.url">jdbc:db2://9.125.233.86:50000/CATSART</property>  
+<property name="connection.username">dang</property>  
+<property name="connection.password">fugui123</property>  
+
+<property name="show_sql">true</property><!-- 是否把sql语句输出到控制台 true -->
+<property name="format_sql">false</property><!-- 输出到控制台的sql语句是否需要进行排版，便于阅读 -->
+<property name="hbm2ddl.auto">update</property><!--create表示每次生成新的表结构| update表示对原有表更新|  -->
+<property name="hibernate.current_session_context_class">thread</property><!-- 使用getSession打开会话  thread：jdbc本地事务|jta：jta全局事务-->
+<property name="hibernate.cache.use_second_level_cache">false</property><!-- 关闭session二级缓存  防止一次性保存太多 出错 -->
+<!-- <mapping class="cn.ibm.cats.classifier.FailLog"/>
+<mapping class="cn.ibm.cats.classifier.HtmlLog"/> -->
+<mapping class="cn.ibm.cats.monitor.Result"/>
+</session-factory>  
+</hibernate-configuration>  
