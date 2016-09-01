@@ -1,10 +1,22 @@
 package cn.ibm.cats.monitor;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
+import cn.ibm.cats.classifier.FailLog;
 
 //id bucket_name cycle_name tc_name result link user groups
 @Entity
@@ -33,9 +45,20 @@ public class Result {
 	private String failedType;
 	private String failedJobLog;
 	private String failedJobJCL;
-
 	@Column(length = 5, name = "admin_version")
 	private String adminVersion;
+	
+	@OneToMany(cascade={CascadeType.ALL},fetch=FetchType.LAZY)//级联关键系和抓取策略(懒加载)
+	@JoinColumn(name="result_id")	//对应外键名称
+	private List <FailLog> failLogs=new ArrayList<FailLog>();
+
+	public List<FailLog> getFailLogs() {
+		return failLogs;
+	}
+
+	public void setFailLogs(List<FailLog> failLogs) {
+		this.failLogs = failLogs;
+	}
 
 	public String getAdminVersion() {
 		return adminVersion;

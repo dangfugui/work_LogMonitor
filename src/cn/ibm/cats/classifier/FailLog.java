@@ -1,9 +1,9 @@
 package cn.ibm.cats.classifier;
 
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.persistence.*;
+
+import cn.ibm.cats.monitor.Result;
 @Entity
 public class FailLog {
 	@Id
@@ -13,9 +13,9 @@ public class FailLog {
 	private String time;
 	private String additional_info;
 	private String line_number;
-	//@ManyToOne(cascade={} ,fetch=FetchType.EAGER)//级联关系和抓取策略(积极)
-	@ManyToMany(mappedBy="failLogs") //指定被主控放控制  自己的句柄名
-	private List<HtmlLog> htmlLogs=new ArrayList<HtmlLog>();
+	@ManyToOne(cascade={} ,fetch=FetchType.EAGER)//级联关系和抓取策略(积极)
+	@JoinColumn(name="result_id")	//指定外键  
+	private Result result;
 	public String getTitle() {
 		return title;
 	}
@@ -51,17 +51,18 @@ public class FailLog {
 		this.line_number = line_number;
 	}
 	
-	public List<HtmlLog> getHtmlLogs() {
-		return htmlLogs;
+	
+	public Result getResult() {
+		return result;
 	}
-	public void setHtmlLogs(List<HtmlLog> htmlLogs) {
-		this.htmlLogs = htmlLogs;
+	public void setResult(Result result) {
+		this.result = result;
 	}
 	@Override
 	public String toString() {
 		return "FailLog [id=" + id + "\n, title=" + title + "\n, time=" + time
 				+ "\n, additional_info=" + additional_info + "\n,  line_number=" + line_number + "\n,"
-						+ "htmlLogs.size="+htmlLogs.size()+" ]\n";
+						+" ]\n";
 	}
 	
 	

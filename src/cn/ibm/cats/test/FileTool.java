@@ -35,9 +35,9 @@ public class FileTool {
 			id=scan.nextInt();
 			FailLog failLog  = (FailLog) session.get(FailLog.class, id);
 			//System.out.println(failLog);
-			for(HtmlLog htmllog:failLog.getHtmlLogs()){
+			/*for(HtmlLog htmllog:failLog.getHtmlLogs()){
 				System.out.println(htmllog.getPath());
-			}
+			}*/
 		}
 		transaction.commit();
 		session.close();

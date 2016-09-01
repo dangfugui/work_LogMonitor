@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.hibernate.Query;
 import org.junit.Test;
@@ -46,27 +47,32 @@ public class ResultDao extends DaoSuper {
 		}
 		return caseMap;
 	}
-	public List<Result> getResultList(){
-		List<Result> list=new ArrayList<Result>();
+	/*
+	 * 拿到数据库中对应的Result
+	 */
+	public Map<String, Result> getResultList(){
+		Map<String,Result> resultMap=new HashMap<String, Result>();
 		transaction=session.beginTransaction();
 		Query query = session.createQuery("from Result as r where r.TCName = ?");
-		for(String name:getBatTestcaseNames().values()){
-			name=name.substring(name.indexOf('.')+1);
-			System.out.println("name"+name);
+		for( Entry<String, String> entry:getBatTestcaseNames().entrySet()){
+			String name=entry.getKey();
 			query.setParameter(0,name);
 			Iterator iterator = query.iterate();
+			Result result=new Result();//////////////////////////////////////////////////////////////new result  for test
+			result.setTCName(name);
+			result.setComponent(entry.getValue());
 			while (iterator.hasNext()) {
-				Result  result=(Result) iterator.next();
-				list.add(result);
-				break;
+				result=(Result) iterator.next();
 			}
+			resultMap.put(result.getTCName(),result);
 		}
 		transaction.commit();
-		return list;
+		return resultMap;
 	}
-	public BufferedReader getHtmlLogBufferedReader(String callString,boolean isFrame){
+	public BufferedReader getHtmlLogBufferedReader(Result result,boolean isFrame){
+		String callString=result.getComponent();
 		String name=callString.substring(callString.lastIndexOf('.')+1);
-		System.out.println(name);
+		//System.out.println(name);
 		String parentPath;
 		if(name.subSequence(0,2).equals("OC")){
 			parentPath=Config.LOG_FOLDER+"db2admin.scripts.oc."+callString;
@@ -79,7 +85,7 @@ public class ResultDao extends DaoSuper {
 		}else {
 			logPath=parentPath+"/rational_ft_log.html";
 		}
-		System.out.println(logPath);
+		//System.out.println(logPath);
 		File file=new File(logPath);
 		if(file.exists()){
 			try {
@@ -91,6 +97,13 @@ public class ResultDao extends DaoSuper {
 			}
 		}
 		return null;
+	}
+	public void save(Map<String, Result> resultMap) {
+		transaction=session.beginTransaction();
+		for (Result result : resultMap.values()) {
+			session.saveOrUpdate(result);
+		}
+		transaction.commit();
 	}
 	
 }

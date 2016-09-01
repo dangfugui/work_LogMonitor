@@ -19,19 +19,19 @@ public class ResultDaoTest {
 	}
 	@Test
 	public void getResultList(){
-		List<Result> list = resultDao.getResultList();
-		for (Result result : list) {
+		Map<String, Result> list = resultDao.getResultList();
+		for (Result result : list.values()) {
 			System.out.println("result"+result.getTCName());
 		}
 	}
-	@Test
-	public void getHtmlLog(){
-		BufferedReader bufr = resultDao.getHtmlLogBufferedReader("oc71.OC71JA30", true);
-		try {
-			System.out.println(bufr.read());
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
+//	@Test
+//	public void getHtmlLog(){
+//		BufferedReader bufr = resultDao.getHtmlLogBufferedReader("oc71.OC71JA30", true);
+//		try {
+//			System.out.println(bufr.read());
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//	}
 }
